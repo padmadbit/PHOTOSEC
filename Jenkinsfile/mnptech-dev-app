@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages {
+        stage("checkout") {
+            steps {
+                checkout scm
+            }
+        }
+        stage ("Deployment") {
+            steps {
+                sh "cp -r /var/lib/jenkins/workspace/mnptech-01/PHOTOSEC/ /var/www/html/"
+            }
+        }
+    }
+}
