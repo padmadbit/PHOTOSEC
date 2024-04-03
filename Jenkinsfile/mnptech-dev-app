@@ -8,7 +8,7 @@ pipeline {
         }
         stage ("Deployment") {
             steps {
-                sh "cp -r /var/lib/jenkins/workspace/mnptech-01/PHOTOSEC/ /var/www/html/"
+                sh "sudo cp -r /var/lib/jenkins/workspace/mnptech-01/* /var/www/html/"
             }
         }
     }
