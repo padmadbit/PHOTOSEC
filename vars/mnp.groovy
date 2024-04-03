@@ -1,3 +1,3 @@
 def call() {
-   sh 'ech Helloo Worl'
+   sh 'systemctl status httpd'
 }
