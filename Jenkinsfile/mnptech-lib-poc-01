@@ -1,3 +1,4 @@
+@Library ("mnp-tech") _
 pipeline {
     agent any
     stages{
@@ -8,7 +9,7 @@ pipeline {
         }
         stage("Apache status") {
             steps {
-                sh "sudo systemctl status apache2"
+                httpdStatus()
             }
         }
     }
