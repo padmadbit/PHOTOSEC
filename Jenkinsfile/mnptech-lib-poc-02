@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages{
+        stage("checkout") {
+            steps {
+                echo "Helloo Azure-Devops"
+            }
+        }
+        stage("Apache status") {
+            steps {
+                sh "sudo systemctl status apache2"
+            }
+        }
+    }
+}
