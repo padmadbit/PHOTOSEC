@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages{
+        stage("chekout") {
+            steps {
+                echo Helloo world
+            }
+        }
+        stage("Apache status") {
+            steps {
+                sh "sudo systemctl status apache2"
+            }
+        }
+    }
+}
