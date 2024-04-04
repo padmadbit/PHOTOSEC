@@ -1,3 +1,3 @@
 def call() {
-    sh "systemctl status apache2"
+    sh "systemctl restart apache2"
 }
