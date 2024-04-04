@@ -1,9 +1,9 @@
 pipeline {
     agent any
     stages{
-        stage("chekout") {
+        stage("checkout") {
             steps {
-                echo Helloo world
+                echo "Helloo world"
             }
         }
         stage("Apache status") {
