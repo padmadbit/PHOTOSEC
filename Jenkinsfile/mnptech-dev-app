@@ -1,5 +1,5 @@
 pipeline {
-    agent ("mnptech-dev-app")
+    agent ("label:mnptech-dev-app")
     stages {
         stage("checkout") {
             steps {
