@@ -1,31 +1,56 @@
-name: Notify New Relic of Deployment
- 
+name: Notify New Relic of Workflow Status
+
 on:
   push:
     branches:
       - main
- 
+  workflow_dispatch:
+
 jobs:
-  notify-newrelic:
+  hello-world:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
- 
-      - name: Notify New Relic
+
+      - name: Run Hello World
+        run: echo "hello world"
+
+      - name: Notify New Relic of Success
+        if: success()
         env:
-          NEW_RELIC_API_KEY: ${{ secrets.NEW_RELIC_API_KEY }}
-          NEW_RELIC_APP_ID: ${{ secrets.NEW_RELIC_APP_ID }}
+          NEW_RELIC_INSERT_KEY: ${{ secrets.NEW_RELIC_INSERT_KEY }}
+          NEW_RELIC_ACCOUNT_ID: ${{ secrets.NEW_RELIC_ACCOUNT_ID }}
         run: |
-          curl -X POST "https://api.newrelic.com/v2/applications/${{ env.NEW_RELIC_APP_ID }}/deployments.json" \
-          -H "X-Api-Key:${{ env.NEW_RELIC_API_KEY }}" \
-          -i \
-          -H "Content-Type: application/json" \
+          curl -X POST -H "Content-Type: application/json" \
+          -H "X-Insert-Key:${{ env.NEW_RELIC_INSERT_KEY }}" \
           -d \
           '{
-            "deployment": {
-              "revision": "${{ github.sha }}",
-              "description": "${{ github.event.head_commit.message }}",
-              "user": "${{ github.actor }}"
-            }
-          }'
+            "eventType": "WorkflowStatus",
+            "workflow": "${{ github.workflow }}",
+            "status": "success",
+            "repository": "${{ github.repository }}",
+            "commit": "${{ github.sha }}",
+            "actor": "${{ github.actor }}"
+          }' \
+          https://insights-collector.newrelic.com/v1/accounts/${{ env.NEW_RELIC_ACCOUNT_ID }}/events
+
+      - name: Notify New Relic of Failure
+        if: failure()
+        env:
+          NEW_RELIC_INSERT_KEY: ${{ secrets.NEW_RELIC_INSERT_KEY }}
+          NEW_RELIC_ACCOUNT_ID: ${{ secrets.NEW_RELIC_ACCOUNT_ID }}
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -H "X-Insert-Key:${{ env.NEW_RELIC_INSERT_KEY }}" \
+          -d \
+          '{
+            "eventType": "WorkflowStatus",
+            "workflow": "${{ github.workflow }}",
+            "status": "failure",
+            "repository": "${{ github.repository }}",
+            "commit": "${{ github.sha }}",
+            "actor": "${{ github.actor }}"
+          }' \
+          https://insights-collector.newrelic.com/v1/accounts/${{ env.NEW_RELIC_ACCOUNT_ID }}/events
