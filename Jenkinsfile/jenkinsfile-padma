@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages {
+            stage ("checkout") {
+                steps {
+                    checkout scm
+                }
+            }
+            stage ("deploy") {
+                steps {
+                    sh "sudo cp -r /var/lib/jenkins/workspace/deploy-devops/* /var/www/html"
+                }
+        }
+    }
+}
